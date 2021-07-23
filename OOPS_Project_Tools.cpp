@@ -42,7 +42,7 @@ public:
    int choicee() {
      cout<<"\t Tool Box ";
      cout<<"\nThere are many tools you can choose: "<<endl;
-     cout<<"1.Calculator \n2.Converter \n3.Matrix Calculator \n4.Set Calculator \n5.Shape Calculator \n6.Date and Time provider \n7.Acknowledgement";
+     cout<<"1.Calculator \n2.Converter \n3.Matrix Calculator \n4.Set Calculator \n5.Shape Calculator \n6.Date and Time provider \n7.Acknowledgement \n8.CGPA Calculator";
      cin>>options;
      return options;
    }
@@ -244,9 +244,8 @@ private:
       for(int i=0;i<row;i++) {
         for(int j=0;j<column;j++) {
           temp_mat.m[i][j]=0;
-          for(int k=0;k<column;k++) {
+          for(int k=0;k<column;k++)
             temp_mat.m[i][j]+=m[i][k]*m2.m[k][j];
-          }
         }
       }
     }
@@ -475,6 +474,49 @@ public:
 
 };
 
+class CGPA_cal {
+private:
+    int num_sub,total_credit,real_credit;
+    int credits[20];
+    char subject[20];
+    float cgpa;
+public:
+    CGPA_cal() {
+      num_sub=0;
+      total_credit=0;
+      real_credit=0;
+      cgpa=0.0;
+    }
+    void entry_marks() {
+      cout<<"Enter the number of subjects: ";
+      cin>>num_sub;
+      cout<<"Enter the credits and grade of the subjects: ";
+      for(int i=0;i<num_sub;i++) {
+        cin>>credits[i]>>subject[i];
+      }
+      system("cls");
+    }
+    void calc_score() {
+      for(int i=0;i<num_sub;i++) {
+        real_credit+=credits[i];
+      }
+      for(int i=0;i<num_sub;i++) {
+        switch(subject[i]) {
+          case 'S': total_credit+=credits[i]*10; break;
+          case 'A': total_credit+=credits[i]*9; break;
+          case 'B': total_credit+=credits[i]*8; break;
+          case 'C': total_credit+=credits[i]*7; break;
+          case 'D': total_credit+=credits[i]*5; break;
+          case 'F': total_credit+=credits[i]*0; break;
+          default: cout<<"Error!";
+        }
+      }
+      cout<<"The total credits earned in the semester is: "<<total_credit;
+      cgpa=total_credit/real_credit;
+      cout<<"\n CGPA of the student: "<<cgpa<<" cgpa"<<endl;
+    }
+};
+
 //class that hosts the WinAPI MessageBox
 class Acknowledgement {
 public:
@@ -488,7 +530,7 @@ public:
 };
 
 //Multiple Inheritance
-class derived: public base_details, public Calculator<double>, public Converter, public date_time_view, public Matrix_calc, public Sets, public shapes_details, public Acknowledgement {
+class derived: public base_details, public Calculator<double>, public Converter, public date_time_view, public Matrix_calc, public Sets, public shapes_details, public Acknowledgement, public CGPA_cal {
 };
 
 void main_sub_fun() {
@@ -506,14 +548,17 @@ void main_sub_fun() {
               break;
       case 3: m1.read_mat();
               m2.read_mat();
+              int mc;
+              cout<<"Which calculation of Matrix do you want to check? "<<endl;
+              cout<<"1.Addition\n2.Subtraction\n3.Multiplication\n"; cin>>mc;
               if(m1 == m2) {
-                m3=m1+m2;
-                m4=m1-m2;
-                m5=m1*m2;
-                cout<<"\n Matrix Addition results to - "<<endl; cout<<m3<<endl;
-                cout<<"\n Matrix Subtraction results to - "<<endl; cout<<m4<<endl;
-                cout<<"\n Matrix Multiplication results to - "<<endl; cout<<m5<<endl;
+                switch(mc) {
+                case 1:  m3=m1+m2; cout<<"\n Matrix Addition results to - "<<endl; cout<<m3<<endl; break;
+                case 2:  m4=m1-m2; cout<<"\n Matrix Subtraction results to - "<<endl; cout<<m4<<endl; break;
+                case 3:  m5=m1*m2; cout<<"\n Matrix Multiplication results to - "<<endl; cout<<m5<<endl; break;
+                default: cout<<"Error!";
               }
+            }
               else {
                 cout<<"Incompatible matrices!";
               }
@@ -532,6 +577,9 @@ void main_sub_fun() {
       case 7: d.thanks();
               sleep(3);
               break;
+      case 8: d.entry_marks();
+              d.calc_score();
+              sleep(3);
       default: cout<<"Error!";
     }
     cout<<"Do you want to check something? Yes or No"; cin>>cc;
